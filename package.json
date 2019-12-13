@@ -15,6 +15,31 @@
     "mac": {
       "category": "public.app-category.utilities"
     },
+    "dmg": {
+      "contents": [
+        {
+          "x" : 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target" : [
+        "AppImage",
+        "deb"
+      ],
+      "icon": "assets/icon.png"
+    },
+    "win": {
+      "target": "NSIS",
+      "icon": "assets/icon.icns"
+    },
     "files": [
       "build/**/*",
       "node_modules/**/*"
@@ -41,7 +66,8 @@
     "preelectron-pack": "yarn build",
     "electron-pack-mac" : "electron-builder -m",
     "electron-pack-windows" : "electron-builder -w",
-    "electron-pack-linux": "electron-builder -l"
+    "electron-pack-linux": "electron-builder -l",
+    "dist": "electron-builder"
   },
   "eslintConfig": {
     "extends": "react-app"
