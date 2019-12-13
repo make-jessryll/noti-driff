@@ -4,7 +4,6 @@ import DriffLogin from "./components/DriffLogin";
 import UserLogin from "./components/UserLogin";
 import NotificationPage from "./components/NotificationPage";
 
-
 class App extends Component {
 
     constructor() {
@@ -56,15 +55,69 @@ class App extends Component {
 
                 let slug = window.localStorage.getItem('slug');
                 window.Echo.private(`${slug}.App.User.${usr}`)
+                    .notification(notification => {
+
+                        if (notification.data.notification_type === "POST" || notification.data.notification_type === "MULTI_POST") {
+                            const {
+                                author,
+                                data
+                            } = notification;
+
+                            let pid = notification.data.personalized_for_id ? `?personalized_for_id=${data.personalized_for_id}` : '';
+
+                            this.__notificationInit(slug, author.name, {
+                                body: `has posted ${data.title}`,
+                                icon: author.profile_image_link,
+                                redirect: `https://${slug}.driff.io/postdetail/${notification.post_id}${pid}`
+                            })
+
+                        }
+
+                        // if (notification.data.notification_type === "MENTION") {
+                        //     let pid = (notification.data.personalized_for_id) ? `?personalized_for_id=${notification.data.post.personalized_for_id}` : '';
+                        // }
+
+                    })
                     .listen('.chat-notification', e => {
-                        console.log(e);
+
                         const {
                             message_from,
                         } = e;
+
                         this.__notificationInit(slug, message_from.user_name, {
-                            body: e.message
+                            body: e.message,
+                            icon: message_from.profile_image_link,
+                            redirect: `https://${slug}.driff.io/chat`
+                        });
+                    })
+                    .listen('.new-task-created', e => {
+
+                        const {
+                            message_from,
+                            data
+                        } = e;
+
+                        this.__notificationInit(slug, message_from.name, {
+                            body: data.title,
+                            icon: message_from.profile_image_link,
+                            redirect: `https://${slug}.driff.io/task/${data.abbreviation}-${data.generated_id}`
+                        });
+
+                    })
+                    .listen('.comment-created', e => {
+
+                        const {
+                            message_from,
+                        } = e;
+
+                        this.__notificationInit(slug, message_from.name, {
+                            body: `${message_from.name} has replied to ${e.abbreviation}-${e.generated_id}`,
+                            icon: message_from.profile_image_link,
+                            redirect: `https://${slug}.driff.io/task/${e.abbreviation}-${e.generated_id}`
                         })
+
                     });
+
 
             }
         }
@@ -100,13 +153,48 @@ class App extends Component {
     };
 
     __notificationInit = (slug, title, options) => {
+
+        let shell = require('electron').shell;
+
         Notification.requestPermission().then(result => {
-            return new Notification(title, {
+
+            let myNotification = new Notification(title, {
                 'body': this.__stripHtml(options.body),
-                'icon' : `https://${slug}.driff.io/assets/icons/favicon.ico`
-            })
+                'icon' : options.icon ? options.icon : `https://${slug}.driff.io/assets/icons/favicon.ico`
+            });
+
+            if (options.redirect) {
+
+                myNotification.onclick = (event) => {
+
+                    event.preventDefault();
+                    shell.openExternal(options.redirect);
+
+                }
+
+            }
         })
     };
+
+    // sendRequestNotificationList = async  () => {
+    //
+    //     let slug = window.localStorage.getItem('slug');
+    //
+    //     return await axios({
+    //         method: "POST",
+    //         url: `https://${slug}.driff.online/api/v2/notification-counter`,
+    //         crossDomain: true,
+    //         headers: {
+    //             'Content-Type': 'application/json'
+    //         }
+    //     })
+    //         .then(res => {
+    //
+    //         })
+    //         .catch(err => {
+    //
+    //         })
+    // };
 
 
     render() {
@@ -124,7 +212,9 @@ class App extends Component {
                     /> : null
                 }
                 {
-                    this.state.hasAuth ? <NotificationPage/> : null
+                    this.state.hasAuth ? <NotificationPage
+                        parentNotificationList={this.state.notificationList}
+                    /> : null
                 }
             </div>
         );
