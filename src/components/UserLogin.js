@@ -76,7 +76,7 @@ class UserLogin extends React.Component {
                     window.localStorage.setItem('access_token', data.data.access_token);
                     window.localStorage.setItem('__usr', data.data.user_auth.id);
                     this.props.__parentInitEcho(`${data.data.token_type} ${data.data.access_token}`, data.data.access_broadcast_token);
-                    this.props.parentHandleUpdateAuth();
+                    window.location.reload();
                 } else {
                     this.setState({
                         isLoading: false,

@@ -101,7 +101,7 @@ class App extends Component {
 
     __notificationInit = (slug, title, options) => {
         Notification.requestPermission().then(result => {
-            var driffNottification = new Notification(title, {
+            return new Notification(title, {
                 'body': this.__stripHtml(options.body),
                 'icon' : `https://${slug}.driff.io/assets/icons/favicon.ico`
             })

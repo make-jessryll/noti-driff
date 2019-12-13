@@ -9,7 +9,7 @@
     "url": "https://driff.io"
   },
   "build": {
-    "appId": "com.my-website.my-app",
+    "appId": "com.driff-notification.my-app",
     "productName": "Driff Notification",
     "copyright": "Copyright © 2019 ${author}",
     "mac": {
@@ -39,8 +39,8 @@
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "electron-pack-mac": "electron-builder -m",
-    "electron-pack-windows": "electron-builder -w",
+    "electron-pack-mac" : "electron-builder -m",
+    "electron-pack-windows" : "electron-builder -w",
     "electron-pack-linux": "electron-builder -l"
   },
   "eslintConfig": {
