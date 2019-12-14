@@ -43,6 +43,13 @@ class UserLogin extends React.Component {
         }
     };
 
+    handleBack = () => {
+
+        window.localStorage.clear();
+        window.location.reload();
+
+    }
+
     btnContinueOnClick = (e) => {
 
         const {
@@ -116,8 +123,17 @@ class UserLogin extends React.Component {
         return (
             <div className="container">
                 <div className="card mt-5">
+                    
                     <div className="card-body">
-                        <h5 className="card-title">{window.localStorage.getItem('slug')} user login</h5>
+                        <h5 className="card-title">
+                            <button 
+                                className="btn btn-dark btn-sm mr-4"
+                                onClick={this.handleBack}
+                            >
+                                Back
+                                </button>
+                            <button className="btn btn-sm btn-default">{window.localStorage.getItem('slug')}.driff.io</button>
+                        </h5>
                         {
                             this.state.errorValue ? <small id="driffHelp" className="form-text text-danger">{this.state.errorValue}</small> : null
                         }

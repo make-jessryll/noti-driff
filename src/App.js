@@ -73,10 +73,6 @@ class App extends Component {
 
                         }
 
-                        // if (notification.data.notification_type === "MENTION") {
-                        //     let pid = (notification.data.personalized_for_id) ? `?personalized_for_id=${notification.data.post.personalized_for_id}` : '';
-                        // }
-
                     })
                     .listen('.chat-notification', e => {
 
@@ -175,27 +171,6 @@ class App extends Component {
             }
         })
     };
-
-    // sendRequestNotificationList = async  () => {
-    //
-    //     let slug = window.localStorage.getItem('slug');
-    //
-    //     return await axios({
-    //         method: "POST",
-    //         url: `https://${slug}.driff.online/api/v2/notification-counter`,
-    //         crossDomain: true,
-    //         headers: {
-    //             'Content-Type': 'application/json'
-    //         }
-    //     })
-    //         .then(res => {
-    //
-    //         })
-    //         .catch(err => {
-    //
-    //         })
-    // };
-
 
     render() {
         return (
