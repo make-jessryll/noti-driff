@@ -1,7 +1,7 @@
 {
   "name": "driff-notification",
   "description": "Electron + Create React App + Electron Builder",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "author": {
     "name": "Jessryll Quitoriano",
