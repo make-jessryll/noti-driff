@@ -18,7 +18,7 @@
     "dmg": {
       "contents": [
         {
-          "x" : 110,
+          "x": 110,
           "y": 150
         },
         {
@@ -30,7 +30,7 @@
       ]
     },
     "linux": {
-      "target" : [
+      "target": [
         "AppImage",
         "deb"
       ],
@@ -64,8 +64,8 @@
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "electron-pack-mac" : "electron-builder -m",
-    "electron-pack-windows" : "electron-builder -w",
+    "electron-pack-mac": "electron-builder -m",
+    "electron-pack-windows": "electron-builder -w",
     "electron-pack-linux": "electron-builder -l",
     "dist": "electron-builder"
   },

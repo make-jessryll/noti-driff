@@ -1,10 +1,6 @@
 import React from "react";
 
 class NotificationItem extends React.Component {
-    
-    constructor() {
-        super();
-    }
 
     __setTitleNotification = () => {
         const {
@@ -25,7 +21,7 @@ class NotificationItem extends React.Component {
             default: 
                 return this.__stripHtml(notification.message);
         }
-    }
+    };
 
     __stripHtml = (html) => {
         let temporalDivElement = document.createElement("div");
