@@ -11,7 +11,7 @@ class StreamItem extends React.Component {
         let shell = require('electron').shell;
         let pid = post.is_personal ? `?personalized_for_id=${post.personalized_for_id}` : "";
         let url = `https://${slug}.driff.io/postdetail/${post.id}${pid}`;
-        return shell.openExternal('https://driff.io');
+        return shell.openExternal(url);
     };
 
     render() {

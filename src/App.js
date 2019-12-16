@@ -54,16 +54,18 @@ class App extends Component {
             } else {
 
                 let slug = window.localStorage.getItem('slug');
+
                 window.Echo.private(`${slug}.App.User.${usr}`)
                     .notification(notification => {
 
-                        if (notification.data.notification_type === "POST" || notification.data.notification_type === "MULTI_POST") {
-                            const {
-                                author,
-                                data
-                            } = notification;
+                        const {
+                            author,
+                            data
+                        } = notification;
 
-                            let pid = notification.data.personalized_for_id ? `?personalized_for_id=${data.personalized_for_id}` : '';
+                        if (data.notification_type === "POST" || data.notification_type === "MULTI_POST") {
+
+                            let pid = data.personalized_for_id ? `?personalized_for_id=${data.personalized_for_id}` : '';
 
                             this.__notificationInit(slug, author.name, {
                                 body: `has posted ${data.title}`,
@@ -73,18 +75,48 @@ class App extends Component {
 
                         }
 
+                        if (data.notification_type === "MENTION") {
+                            let pid = (data.personalized_for_id) ? `?personalized_for_id=${data.post.personalized_for_id}` : '';
+
+                            this.__notificationInit(slug, author.name, {
+                               body: `has mentioned you on ${data.post.title}`,
+                               icon: author.profile_image_link,
+                               redirect: `https://${slug}.driff.io/postdetail/${notification.post_id}${pid}`
+                            });
+
+                        }
+
+                        if (data.notification_type === 'REPLY') {
+
+                            if (author.id !== usr) {
+
+                                let pid = (data.personalized_for_id) ? `?personalized_for_id=${data.post.personalized_for_id}` : '';
+
+                                this.__notificationInit(slug, author.name, {
+                                    body: `has replied to post ${data.post.title}`,
+                                    icon: author.profile_image_link,
+                                    redirect: `https://${slug}.driff.io/postdetail/${notification.post_id}${pid}`
+                                })
+
+                            }
+
+                        }
+
                     })
                     .listen('.chat-notification', e => {
 
                         const {
                             message_from,
                         } = e;
+                        if (message_from.id !== usr) {
 
-                        this.__notificationInit(slug, message_from.user_name, {
-                            body: e.message,
-                            icon: message_from.profile_image_link,
-                            redirect: `https://${slug}.driff.io/chat`
-                        });
+                            this.__notificationInit(slug, message_from.user_name, {
+                                body: e.message,
+                                icon: message_from.profile_image_link,
+                                redirect: `https://${slug}.driff.io/chat`
+                            });
+
+                        }
                     })
                     .listen('.new-task-created', e => {
 
@@ -111,6 +143,24 @@ class App extends Component {
                             icon: message_from.profile_image_link,
                             redirect: `https://${slug}.driff.io/task/${e.abbreviation}-${e.generated_id}`
                         })
+
+                    })
+                    .listen('.move-task-column', e => {
+
+                        const {
+                            message_from,
+                            data
+                        } = e;
+
+                        if (message_from.id !== usr) {
+
+                            this.__notificationInit(slug, message_from.name, {
+                                body: `${message_from.name} has moved task ${data.abbreviation}-${data.generated_id}`,
+                                icon: message_from.profile_image_link,
+                                redirect: `https://${slug}.driff.io/task/${data.abbreviation}-${data.generated_id}`
+                            })
+
+                        }
 
                     });
 
@@ -156,7 +206,7 @@ class App extends Component {
 
             let myNotification = new Notification(title, {
                 'body': this.__stripHtml(options.body),
-                'icon' : options.icon ? options.icon : `https://${slug}.driff.io/assets/icons/favicon.ico`
+                'icon': options.icon ? options.icon : `https://${slug}.driff.io/assets/icons/favicon.ico`
             });
 
             if (options.redirect) {
