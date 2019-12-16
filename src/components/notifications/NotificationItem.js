@@ -30,6 +30,11 @@ class NotificationItem extends React.Component {
         return temporalDivElement.textContent || temporalDivElement.innerText || "";
     };
 
+    handleClick = (e) => {
+      e.preventDefault();
+
+    };
+
     render() {
         const {
             notification
