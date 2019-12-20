@@ -1,7 +1,7 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
-
+const ipcMain = electron.ipcMain;
 const path = require('path');
 const isDev = require('electron-is-dev');
 
@@ -30,4 +30,12 @@ app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
   }
+});
+
+ipcMain.on('update-notification-counter', (event, arg) => {
+    app.setBadgeCount(Number(arg));
+});
+
+ipcMain.on('add-notification-counter', (event, arg) => {
+  app.setBadgeCount(app.getBadgeCount() + Number(arg));
 });

@@ -29,6 +29,8 @@ class App extends Component {
 
     componentDidMount() {
 
+        window.Electron = require('electron');
+
         this.setState({
             hasSlug: window.localStorage.getItem('slug')
         });
@@ -71,7 +73,9 @@ class App extends Component {
                                 body: `has posted ${data.title}`,
                                 icon: author.profile_image_link,
                                 redirect: `https://${slug}.driff.io/postdetail/${notification.post_id}${pid}`
-                            })
+                            });
+
+                            window.Electron.ipcRenderer.send('add-notification-counter', 1);
 
                         }
 
@@ -83,6 +87,8 @@ class App extends Component {
                                icon: author.profile_image_link,
                                redirect: `https://${slug}.driff.io/postdetail/${notification.post_id}${pid}`
                             });
+
+                            window.Electron.ipcRenderer.send('add-notification-counter', 1);
 
                         }
 
@@ -96,7 +102,9 @@ class App extends Component {
                                     body: `has replied to post ${data.post.title}`,
                                     icon: author.profile_image_link,
                                     redirect: `https://${slug}.driff.io/postdetail/${notification.post_id}${pid}`
-                                })
+                                });
+
+                                window.Electron.ipcRenderer.send('add-notification-counter', 1);
 
                             }
 
@@ -108,6 +116,7 @@ class App extends Component {
                         const {
                             message_from,
                         } = e;
+
                         if (message_from.id !== usr) {
 
                             this.__notificationInit(slug, message_from.user_name, {
@@ -117,6 +126,8 @@ class App extends Component {
                             });
 
                         }
+
+                        window.Electron.ipcRenderer.send('add-notification-counter', 1);
                     })
                     .listen('.new-task-created', e => {
 
@@ -131,6 +142,8 @@ class App extends Component {
                             redirect: `https://${slug}.driff.io/task/${data.abbreviation}-${data.generated_id}`
                         });
 
+                        window.Electron.ipcRenderer.send('add-notification-counter', 1);
+
                     })
                     .listen('.comment-created', e => {
 
@@ -142,8 +155,9 @@ class App extends Component {
                             body: `${message_from.name} has replied to ${e.abbreviation}-${e.generated_id}`,
                             icon: message_from.profile_image_link,
                             redirect: `https://${slug}.driff.io/task/${e.abbreviation}-${e.generated_id}`
-                        })
+                        });
 
+                        window.Electron.ipcRenderer.send('add-notification-counter', 1);
                     })
                     .listen('.move-task-column', e => {
 
@@ -158,7 +172,8 @@ class App extends Component {
                                 body: `${message_from.name} has moved task ${data.abbreviation}-${data.generated_id}`,
                                 icon: message_from.profile_image_link,
                                 redirect: `https://${slug}.driff.io/task/${data.abbreviation}-${data.generated_id}`
-                            })
+                            });
+                            window.Electron.ipcRenderer.send('add-notification-counter', 1);
 
                         }
 
@@ -200,7 +215,7 @@ class App extends Component {
 
     __notificationInit = (slug, title, options) => {
 
-        let shell = require('electron').shell;
+        // let shell = require('electron').shell;
 
         Notification.requestPermission().then(result => {
 
@@ -214,8 +229,8 @@ class App extends Component {
                 myNotification.onclick = (event) => {
 
                     event.preventDefault();
-                    shell.openExternal(options.redirect);
-
+                    // shell.openExternal(options.redirect);
+                    window.Electron.shell.openExternal(options.redirect);
                 }
 
             }

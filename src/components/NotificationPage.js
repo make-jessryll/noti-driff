@@ -16,6 +16,8 @@ class NotificationPage extends React.Component {
     }
 
     componentDidMount() {
+
+        var notiCounter = 0;
         let p_type  = window.localStorage.getItem('__p_type');
 
         if (p_type) {
@@ -32,6 +34,9 @@ class NotificationPage extends React.Component {
                 this.setState({
                     streamCount: res.data.entries,
                 })
+
+                notiCounter = res.data.entries;
+
 
             } else {
 
@@ -57,17 +62,24 @@ class NotificationPage extends React.Component {
 
                 }
 
+                let chatCount = res.data.filter(e => e.entity_type === 'CHAT_MESSAGE')[0].count;
+
                 this.setState({
-                    chatCount: res.data.filter(e => e.entity_type === 'CHAT_MESSAGE')[0].count,
+                    chatCount: chatCount,
                     taskCount: taskCount,
                 })
 
+                notiCounter = notiCounter + chatCount;
+                notiCounter = notiCounter + taskCount;
+                window.Electron.ipcRenderer.send('update-notification-counter', notiCounter);
             } else {
 
                 console.log(res.data);
 
             }
         })
+
+
     }
 
     handleChangeDriff = () => {

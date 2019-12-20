@@ -1,7 +1,7 @@
 {
   "name": "driff-notification",
   "description": "Driff Notification",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "private": true,
   "author": {
     "name": "Jessryll Quitoriano",
@@ -16,7 +16,6 @@
       "category": "public.app-category.utilities",
       "icon": "icons/icon.icns"
     },
-  
     "linux": {
       "target": [
         "AppImage",
