@@ -145,7 +145,8 @@ class NotificationPage extends React.Component {
         return (
             <div>
                 <h1>
-                    <button
+                    {
+                        this.state.type !== '' ? <button
                         className={'btn btn-sm btn-dark float-left'}
                         onClick={() => {
                             window.localStorage.setItem('__p_type', "");
@@ -155,7 +156,9 @@ class NotificationPage extends React.Component {
                         }}
                     >
                         BACK
-                    </button>
+                    </button> : null
+                    }
+                
                     <button
                         className={'btn btn-sm btn-dark float-right'}
                         onClick={this.handleChangeDriff}
@@ -175,7 +178,8 @@ class NotificationPage extends React.Component {
                                 window.localStorage.setItem('__p_type', 'stream');
                                 this.setState({
                                     state: 'stream'
-                                })
+                                });
+                                window.location.reload();
                             }}
                         >
                             Stream
